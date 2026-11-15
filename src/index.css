@@ -1,0 +1,157 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   Base styles
+   ------------------------------------------------------------------ */
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-navy-950 font-sans text-white antialiased;
+    overflow-x: hidden;
+  }
+
+  /* Anchored sections stop below the fixed navbar when you click a nav link */
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+
+  /* Dark dropdown options (native <select> menus) */
+  option {
+    background: #0b1230;
+    color: #fff;
+  }
+
+  :focus-visible {
+    outline: 2px solid #22d3ee;
+    outline-offset: 2px;
+  }
+
+  ::selection {
+    background: rgba(47, 107, 255, 0.45);
+  }
+
+  /* Respect the visitor's "reduce motion" setting */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ------------------------------------------------------------------
+   Reusable components
+   ------------------------------------------------------------------ */
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+
+  .section {
+    @apply relative py-20 sm:py-28;
+  }
+
+  /* Soft fade at the top/bottom so sections blend with the 3D background */
+  .section-alt {
+    background: linear-gradient(
+      180deg,
+      rgba(11, 18, 48, 0) 0%,
+      rgba(11, 18, 48, 0.7) 14%,
+      rgba(11, 18, 48, 0.7) 86%,
+      rgba(11, 18, 48, 0) 100%
+    );
+  }
+
+  .gradient-text {
+    @apply bg-brand-gradient bg-clip-text text-transparent;
+  }
+
+  /* Buttons */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition duration-300;
+  }
+  .btn-primary {
+    @apply btn bg-brand-gradient text-white shadow-glow hover:-translate-y-0.5 hover:brightness-110;
+  }
+  .btn-ghost {
+    @apply btn border border-white/15 bg-white/5 text-white hover:border-brand-cyan/60 hover:bg-white/10;
+  }
+
+  /* Cards */
+  .card {
+    @apply rounded-2xl border border-white/10 bg-navy-800/70 transition duration-300;
+  }
+
+  /* Small pill label */
+  .chip {
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/80;
+  }
+
+  /* Form controls (contact form + admin panel) */
+  .input {
+    @apply w-full rounded-xl border border-white/10 bg-navy-900/80 px-4 py-3 text-sm text-white placeholder:text-white/35 transition focus:border-brand-cyan focus:outline-none focus:ring-2 focus:ring-brand-cyan/25;
+  }
+  .label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-white/60;
+  }
+
+  /* ---- Scroll reveal (see components/Reveal.jsx) ---- */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    transition:
+      opacity 0.8s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+    will-change: opacity, transform;
+  }
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+
+  /* ---- 3D tilt card (see components/TiltCard.jsx) ---- */
+  .tilt-card {
+    transform-style: preserve-3d;
+    transition: transform 0.25s ease-out, box-shadow 0.3s ease, border-color 0.3s ease;
+    will-change: transform;
+  }
+  .tilt-card:hover {
+    border-color: rgba(34, 211, 238, 0.45);
+    box-shadow: 0 24px 60px -20px rgba(47, 107, 255, 0.55);
+  }
+  .tilt-glare {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(
+      420px circle at var(--gx, 50%) var(--gy, 50%),
+      rgba(255, 255, 255, 0.14),
+      transparent 45%
+    );
+  }
+  .tilt-card:hover .tilt-glare {
+    opacity: 1;
+  }
+}
