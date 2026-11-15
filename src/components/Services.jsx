@@ -14,7 +14,7 @@ export default function Services() {
           eyebrow="Services"
           title="Everything you need to"
           accent="grow online"
-          subtitle="From a first website to a full custom web app, I design, build and look after it all."
+          subtitle="From a first website to a full custom web app, we design, build and look after it all."
         />
 
         <div className="flex flex-wrap justify-center gap-5">

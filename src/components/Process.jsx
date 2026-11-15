@@ -6,13 +6,13 @@ import SectionHeading from './SectionHeading';
 const STEPS = [
   {
     icon: 'chat',
-    title: 'Discuss',
-    text: 'We talk about your goals, audience and budget, so I understand exactly what success looks like for you.',
+    title: 'Audit',
+    text: 'We talk about your goals, audience and budget, so we understand exactly what success looks like for you.',
   },
   {
     icon: 'pen',
     title: 'Design',
-    text: 'I create a clear, modern design for you to review. We refine it together until it feels right.',
+    text: 'We create a clear, modern design for you to review. We refine it together until it feels right.',
   },
   {
     icon: 'code',
