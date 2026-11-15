@@ -38,7 +38,7 @@ export default function Home() {
         aria-hidden="true"
         style={{
           background:
-            'radial-gradient(60rem 40rem at 85% 0%, rgba(47,107,255,0.14), transparent 60%), radial-gradient(50rem 36rem at 0% 100%, rgba(139,92,246,0.12), transparent 60%)',
+            'radial-gradient(60rem 40rem at 85% 0%, rgba(214,194,161,0.14), transparent 60%), radial-gradient(50rem 36rem at 0% 100%, rgba(245,237,224,0.1), transparent 60%)',
         }}
       />
 

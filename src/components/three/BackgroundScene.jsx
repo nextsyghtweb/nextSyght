@@ -1,15 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { Canvas } from '@react-three/fiber';
 import HeroEye from './HeroEye';
-import Particles from './Particles';
-import FloatingShapes from './FloatingShapes';
 import FpsGuard from './FpsGuard';
 
 /**
  * BackgroundScene – ONE fixed, full-screen WebGL canvas behind the whole page.
  *
  * Using a single canvas (instead of one per section) keeps things fast:
- * it holds the hero eye, the particle field and the floating shapes.
+ * it holds the animated hero eye while keeping the page background static.
  *
  * It tracks the mouse and scroll position with plain window listeners and
  * shares them with the 3D objects through refs (no React re-renders per frame).
@@ -62,11 +60,9 @@ export default function BackgroundScene({ isMobile, onFallback }) {
         }}
       >
         <ambientLight intensity={0.9} />
-        <pointLight position={[-4, 3, 5]} intensity={60} color="#22d3ee" />
-        <pointLight position={[4, -2, 5]} intensity={60} color="#8b5cf6" />
+        <pointLight position={[-4, 3, 5]} intensity={60} color="#D6C2A1" />
+        <pointLight position={[4, -2, 5]} intensity={60} color="#F5EDE0" />
 
-        <Particles count={isMobile ? 220 : 650} scroll={scroll} />
-        <FloatingShapes count={isMobile ? 5 : 9} pointer={pointer} scroll={scroll} />
         <HeroEye pointer={pointer} scroll={scroll} isMobile={isMobile} />
 
         <FpsGuard onSlow={onFallback} />
