@@ -22,7 +22,7 @@ const STEPS = [
   {
     icon: 'rocket',
     title: 'Launch',
-    text: 'After careful testing we go live. I stay close for support, tweaks and future improvements.',
+    text: 'After careful testing we go live. We stay close for support, tweaks and future improvements.',
   },
 ];
 

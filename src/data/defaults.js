@@ -28,7 +28,7 @@ export const DEFAULT_SETTINGS = {
     headline: 'We Build the Web',
     headlineAccent: 'You Envision',
     subtext:
-      'Fast, beautiful, mobile-first websites, online stores and web apps that turn visitors into customers. From first idea to launch day, I handle it all.',
+      'Fast, beautiful, mobile-first websites, online stores and web apps that turn visitors into customers. From first idea to launch day, we handle it all.',
     ctaPrimary: 'Start a Project',
     ctaSecondary: 'View My Work',
   },
