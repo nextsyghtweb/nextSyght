@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node -e \"import('fs').then(f=>{console.log('_redirects in dist:',f.existsSync('dist/_redirects'));f.rmSync('dist/_redirects',{force:true})})\"",
     "preview": "vite preview --host"
   },
   "dependencies": {
