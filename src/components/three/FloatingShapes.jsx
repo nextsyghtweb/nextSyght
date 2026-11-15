@@ -11,7 +11,7 @@ import * as THREE from 'three';
  */
 
 const SHAPE_TYPES = ['ico', 'octa', 'torus', 'box', 'tetra'];
-const COLORS = ['#22d3ee', '#2f6bff', '#8b5cf6'];
+const COLORS = ['#D6C2A1', '#F5EDE0'];
 
 /** Deterministic pseudo-random numbers so the layout is the same on every load. */
 function makeConfigs(count) {

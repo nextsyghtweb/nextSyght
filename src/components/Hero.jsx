@@ -29,14 +29,14 @@ export default function Hero({ fallback }) {
           </span>
 
           <h1
-            className="mt-5 animate-fade-up text-[2.5rem] font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
+            className="text-pop mt-5 text-[2.5rem] font-bold leading-[1.08] tracking-tight sm:text-5xl lg:text-6xl xl:text-7xl"
             style={anim(80)}
           >
             {h.headline} <span className="gradient-text">{h.headlineAccent}</span>
           </h1>
 
           <p
-            className="mt-5 max-w-xl animate-fade-up text-base leading-relaxed text-white/70 sm:text-lg"
+            className="mt-5 max-w-xl animate-fade-up text-base font-medium leading-relaxed text-white/85 sm:text-lg"
             style={anim(160)}
           >
             {h.subtext}

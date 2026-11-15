@@ -50,7 +50,7 @@ const fragmentShader = /* glsl */ `
   }
 `;
 
-const PALETTE = ['#22d3ee', '#2f6bff', '#8b5cf6', '#ffffff'].map((c) => new THREE.Color(c));
+const PALETTE = ['#D6C2A1', '#F5EDE0', '#ffffff'].map((c) => new THREE.Color(c));
 
 export default function Particles({ count, scroll }) {
   const { viewport } = useThree();

@@ -15,7 +15,7 @@ import * as THREE from 'three';
  * screens and above the headline on phones.
  */
 
-const COLORS = { cyan: '#22d3ee', blue: '#2f6bff', violet: '#8b5cf6' };
+const COLORS = { cyan: '#D6C2A1', blue: '#D6C2A1', violet: '#F5EDE0' };
 
 // ---- Iris shader: radial cyan -> blue -> violet gradient with slow shimmering rays ----
 const irisVertex = /* glsl */ `
@@ -34,9 +34,9 @@ const irisFragment = /* glsl */ `
     float r = 1.0 - vUv.y;
     float a = vUv.x * 6.2831853;
 
-    vec3 cyan   = vec3(0.133, 0.827, 0.933);
-    vec3 blue   = vec3(0.184, 0.420, 1.000);
-    vec3 violet = vec3(0.545, 0.361, 0.965);
+    vec3 cyan   = vec3(0.839, 0.761, 0.631);
+    vec3 blue   = vec3(0.839, 0.761, 0.631);
+    vec3 violet = vec3(0.961, 0.929, 0.878);
 
     vec3 col = mix(cyan, blue, smoothstep(0.15, 0.55, r));
     col = mix(col, violet, smoothstep(0.50, 0.95, r));
@@ -59,9 +59,9 @@ function makeGlowTexture() {
   canvas.width = canvas.height = size;
   const ctx = canvas.getContext('2d');
   const g = ctx.createRadialGradient(size / 2, size / 2, 0, size / 2, size / 2, size / 2);
-  g.addColorStop(0, 'rgba(47,107,255,0.55)');
-  g.addColorStop(0.35, 'rgba(139,92,246,0.25)');
-  g.addColorStop(0.7, 'rgba(34,211,238,0.07)');
+  g.addColorStop(0, 'rgba(214,194,161,0.55)');
+  g.addColorStop(0.35, 'rgba(245,237,224,0.2)');
+  g.addColorStop(0.7, 'rgba(214,194,161,0.08)');
   g.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, size, size);
