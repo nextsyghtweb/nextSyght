@@ -9,31 +9,31 @@ export default {
         sans: ['Poppins', 'Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
       },
       colors: {
-        // Dark navy surfaces
+        // Warm black and beige theme
         navy: {
-          950: '#050816',
-          900: '#070b1f',
-          800: '#0b1230',
-          700: '#111a40',
-          600: '#1a2557',
+          950: '#171717',
+          900: '#292524',
+          800: '#292524',
+          700: '#292524',
+          600: '#292524',
         },
-        // Brand accents: electric blue, violet, cyan
+        // Brand accents retain their semantic names for component compatibility.
         brand: {
-          blue: '#2f6bff',
-          violet: '#8b5cf6',
-          cyan: '#22d3ee',
+          blue: '#D6C2A1',
+          violet: '#D6C2A1',
+          cyan: '#D6C2A1',
         },
       },
       // Extra opacity steps used for subtle borders/text (e.g. text-white/65)
       opacity: { 15: '0.15', 35: '0.35', 45: '0.45', 55: '0.55', 65: '0.65' },
       backgroundImage: {
-        'brand-gradient': 'linear-gradient(135deg, #22d3ee 0%, #2f6bff 50%, #8b5cf6 100%)',
+        'brand-gradient': 'linear-gradient(135deg, #F5EDE0 0%, #D6C2A1 100%)',
         'brand-gradient-soft':
-          'linear-gradient(135deg, rgba(34,211,238,.18) 0%, rgba(47,107,255,.18) 50%, rgba(139,92,246,.18) 100%)',
+          'linear-gradient(135deg, rgba(245,237,224,.18) 0%, rgba(214,194,161,.18) 100%)',
       },
       boxShadow: {
-        glow: '0 10px 34px -8px rgba(47, 107, 255, 0.6)',
-        'glow-violet': '0 10px 34px -8px rgba(139, 92, 246, 0.55)',
+        glow: '0 10px 34px -8px rgba(214, 194, 161, 0.45)',
+        'glow-violet': '0 10px 34px -8px rgba(214, 194, 161, 0.35)',
       },
       keyframes: {
         'fade-up': {
