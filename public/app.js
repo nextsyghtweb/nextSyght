@@ -1,6 +1,4 @@
-const API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-  ? ''
-  : 'https://nextsyght.onrender.com';
+const API_BASE = '';
 
 // ---------- mobile nav ----------
 const toggle = document.getElementById('menuToggle');

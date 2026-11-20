@@ -1,8 +1,6 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-const API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
-  ? ''
-  : 'https://nextsyght.onrender.com';
+const API_BASE = '';
 const SESSION_KEY = 'dukaan_supabase_session';
 
 const loginScreen = document.getElementById('loginScreen');
