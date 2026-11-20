@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 450" width="400" height="450" role="img" aria-label="Friendly shopkeeper holding a magnifying glass over a growth chart and an audit checklist">
+  <!-- neck -->
+  <rect x="182" y="198" width="36" height="58" fill="#D9A070" stroke="#22314A" stroke-width="4"/>
+
+  <!-- body (kurta) -->
+  <path d="M118 372 L118 305 Q118 258 166 250 L234 250 Q282 258 282 305 L282 372 Z" fill="#2F6F62" stroke="#22314A" stroke-width="4" stroke-linejoin="round"/>
+  <!-- collar -->
+  <path d="M182 250 L200 282 L218 250 Z" fill="#FFFDF8" stroke="#22314A" stroke-width="3" stroke-linejoin="round"/>
+  <!-- gamchha scarf -->
+  <path d="M150 253 L180 253 L242 368 L206 368 Z" fill="#E8A33D" stroke="#22314A" stroke-width="3.5" stroke-linejoin="round"/>
+  <path d="M166 280 L192 280 M178 302 L204 302 M190 324 L216 324" stroke="#C77F1E" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- left arm + checklist -->
+  <path d="M144 286 L114 336" stroke="#22314A" stroke-width="30" stroke-linecap="round"/>
+  <path d="M144 286 L114 336" stroke="#2F6F62" stroke-width="22" stroke-linecap="round"/>
+  <g transform="rotate(-8 99 312)">
+    <rect x="60" y="262" width="78" height="100" rx="7" fill="#FFFDF8" stroke="#22314A" stroke-width="4"/>
+    <rect x="82" y="254" width="34" height="14" rx="4" fill="#E8A33D" stroke="#22314A" stroke-width="3.5"/>
+    <path d="M71 290 l5 5 l9 -10" fill="none" stroke="#2F6F62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M71 314 l5 5 l9 -10" fill="none" stroke="#2F6F62" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M72 331 l11 11 M83 331 l-11 11" fill="none" stroke="#8C2F39" stroke-width="4" stroke-linecap="round"/>
+    <path d="M94 290 H126 M94 314 H126 M94 337 H120" stroke="#4A5A76" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <circle cx="112" cy="338" r="13" fill="#E9B98A" stroke="#22314A" stroke-width="4"/>
+
+  <!-- right arm + magnifying glass -->
+  <path d="M258 286 L274 248" stroke="#22314A" stroke-width="30" stroke-linecap="round"/>
+  <path d="M258 286 L274 248" stroke="#2F6F62" stroke-width="22" stroke-linecap="round"/>
+  <path d="M293 215 L262 247" stroke="#22314A" stroke-width="15" stroke-linecap="round"/>
+  <path d="M293 215 L262 247" stroke="#8C2F39" stroke-width="8" stroke-linecap="round"/>
+  <circle cx="322" cy="186" r="46" fill="#E8F3F0" stroke="#22314A" stroke-width="7"/>
+  <path d="M290 170 Q296 156 310 150" fill="none" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"/>
+  <rect x="298" y="198" width="12" height="14" fill="#E8A33D" stroke="#22314A" stroke-width="2.5"/>
+  <rect x="314" y="188" width="12" height="24" fill="#8C2F39" stroke="#22314A" stroke-width="2.5"/>
+  <rect x="330" y="174" width="12" height="38" fill="#2F6F62" stroke="#22314A" stroke-width="2.5"/>
+  <path d="M294 213 H348" stroke="#22314A" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="274" cy="246" r="13" fill="#E9B98A" stroke="#22314A" stroke-width="4"/>
+
+  <g transform="translate(0,16)">
+  <!-- ears -->
+  <circle cx="142" cy="156" r="11" fill="#E9B98A" stroke="#22314A" stroke-width="4"/>
+  <circle cx="258" cy="156" r="11" fill="#E9B98A" stroke="#22314A" stroke-width="4"/>
+  <!-- head -->
+  <circle cx="200" cy="150" r="58" fill="#E9B98A" stroke="#22314A" stroke-width="4"/>
+  <!-- turban -->
+  <path d="M141 136 Q138 80 200 76 Q262 80 259 136 Q232 116 200 116 Q168 116 141 136 Z" fill="#E8A33D" stroke="#22314A" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M148 112 Q200 88 253 112" fill="none" stroke="#C77F1E" stroke-width="4" stroke-linecap="round"/>
+  <path d="M142 128 Q200 108 258 128" fill="none" stroke="#8C2F39" stroke-width="7" stroke-linecap="round"/>
+  <circle cx="200" cy="72" r="10" fill="#E8A33D" stroke="#22314A" stroke-width="4"/>
+
+  <!-- face -->
+  <path d="M168 142 Q180 135 192 141 M208 141 Q220 135 232 142" fill="none" stroke="#22314A" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="180" cy="154" r="6.5" fill="#22314A"/>
+  <circle cx="220" cy="154" r="6.5" fill="#22314A"/>
+  <circle cx="182.5" cy="151.5" r="2" fill="#FFFFFF"/>
+  <circle cx="222.5" cy="151.5" r="2" fill="#FFFFFF"/>
+  <circle cx="162" cy="176" r="8" fill="#E07A6A" opacity="0.35"/>
+  <circle cx="238" cy="176" r="8" fill="#E07A6A" opacity="0.35"/>
+  <ellipse cx="200" cy="168" rx="6" ry="5" fill="#D9A070"/>
+  <path d="M170 182 Q186 170 200 178 Q214 170 230 182 Q214 190 200 184 Q186 190 170 182 Z" fill="#22314A" stroke="#22314A" stroke-width="2" stroke-linejoin="round"/>
+  <path d="M185 194 Q200 206 215 194" fill="none" stroke="#22314A" stroke-width="3.5" stroke-linecap="round"/>
+
+  </g>
+
+  <!-- shop counter -->
+  <rect x="56" y="376" width="288" height="66" rx="6" fill="#8C2F39" stroke="#22314A" stroke-width="4"/>
+  <rect x="46" y="366" width="308" height="16" rx="5" fill="#E8A33D" stroke="#22314A" stroke-width="4"/>
+  <path d="M110 384 V440 M290 384 V440" stroke="#6E1F28" stroke-width="3"/>
+  <text x="200" y="418" text-anchor="middle" font-family="'Courier New', monospace" font-weight="700" font-size="20" letter-spacing="2" fill="#FBF3E4">FREE AUDIT</text>
+</svg>

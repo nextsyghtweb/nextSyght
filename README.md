@@ -1,177 +1,207 @@
-# Nextsyght – Portfolio & Lead-Generation Website
+# NextSyght
+NextSyght is an Express website for SEO/AEO audits, with a public frontend,
+Supabase projects/settings/enquiries/reviews, project image uploads,
+Supabase Auth administration, Formspree enquiry forwarding and a local RAG chat.
 
-React + Tailwind CSS + React Three Fiber (Three.js) front end, with a **Supabase** backend so you can edit the site from a password-protected `/admin` page. Enquiries are emailed to you through **Formspree**.
+## Tech stack
 
-**What you get**
+- Node.js and Express
+- Browser HTML/CSS/JavaScript
+- Supabase Auth, Database and Storage
+- Formspree enquiry forwarding
+- Local `transformers.js` RAG chat
 
-- Hero with an interactive 3D glowing `< >` eye that follows the mouse and reacts to scrolling
-- 3D particles and floating shapes in the background, 3D-tilting project cards, scroll-reveal animations
-- Automatic lightweight fallback (SVG eye + CSS shapes) on weak devices, reduced-motion users, no-WebGL browsers, or if the 3D scene runs slowly
-- Sections: Hero, Services, Projects (filters), Process, Why Nextsyght, Testimonials, Contact, Footer
-- Sticky **Get a Free Quote** button and floating **WhatsApp** button
-- Hidden `/admin` to edit contact details, social links, hero text, services, testimonials and projects (with image upload), saved permanently for all visitors
-- SEO meta tags, Open Graph / Twitter tags, structured data, `robots.txt`, `sitemap.xml`, alt text on images
+## Folder structure
 
----
+| Path | Purpose |
+|---|---|
+| `server.js` | Express entry point and API router setup |
+| `routes/` | Public and admin API route modules |
+| `middleware/adminAuth.js` | Supabase login verification and admin email allowlist |
+| `public/` | Existing website and admin frontend |
+| `rag/` | Local RAG knowledge and inference engine |
+| `supabaseClient.js` | Server-only Supabase service-role client |
+| `supabase/schema.sql` | Supabase tables, RLS policies and Storage setup |
+| `.env.example` | Placeholder environment variables |
 
-## 1. Run it on your computer
+## Supabase setup
 
-You need [Node.js](https://nodejs.org) 18 or newer.
+1. Create a Supabase project.
+2. Open **SQL Editor** and run [`supabase/schema.sql`](supabase/schema.sql).
+3. In **Storage**, confirm that the public `project-images` bucket exists.
+4. Copy the project URL and keys from **Project Settings > API**.
+5. Copy `.env.example` to `.env` and fill in the placeholders.
+6. In **Authentication > Users**, create `nextsyght.web@gmail.com` and set a strong password.
+
+SQLite is empty, so no existing project or review records need migration.
+The existing contact defaults are seeded into `site_settings`.
+
+## Environment variables
+
+| Variable | Purpose | Secret? |
+|---|---|---|
+| `PORT` | Express listening port | No |
+| `SUPABASE_URL` | Supabase project URL | Public project value |
+| `SUPABASE_ANON_KEY` | Supabase browser/public key | Public key; not an elevated secret |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server-only Supabase privileged client | **Yes; server only** |
+| `ADMIN_EMAILS` | Comma-separated Supabase Auth users allowed to manage admin data | Sensitive configuration |
+| `FORMSPREE_ENDPOINT` | Formspree form submission URL | No; keep server-side |
+
+Never place `SUPABASE_SERVICE_ROLE_KEY` in HTML or JavaScript under `public/`.
+
+## Run locally
+
+Requires Node.js 18 or newer.
 
 ```bash
 npm install
-cp .env.example .env     # then fill in the values (steps 2 and 3 below)
-npm run dev              # opens http://localhost:5173
+cp .env.example .env
+npm start
 ```
 
-The site works immediately with placeholder content, even before you set up the backend.
-Tip: add `?fallback=1` to the URL (`http://localhost:5173/?fallback=1`) to preview the non-3D fallback.
+Open `http://localhost:3000`.
 
----
+## Admin setup
 
-## 2. Contact form: where to put your key (Formspree)
+Set `ADMIN_EMAILS=nextsyght.web@gmail.com` in `.env`. Login at `/admin.html`
+uses Supabase Auth. The server verifies the access token and allowlists only
+the configured email.
 
-1. Sign up free at <https://formspree.io> and click **New form**. Use the email where you want enquiries (for example the one you check daily).
-2. Copy the **form ID** from the form's URL: `https://formspree.io/f/`**`xyzabcde`** ← this part.
-3. Put it in your `.env` file:
-   ```
-   VITE_FORMSPREE_FORM_ID=xyzabcde
-   ```
-4. On Vercel/Netlify add the same variable (see section 5).
-5. Send a test enquiry from the site. Formspree asks you to confirm your email the first time.
+The dashboard manages:
 
-Until an ID is set, the form simply opens the visitor's email app with the message filled in, so no enquiry is lost while you set up.
-Spam protection: there is a hidden honeypot field, and you can also enable reCAPTCHA in the Formspree dashboard.
+- Projects, including Supabase Storage image upload, replacement and deletion
+- Contact phone numbers, WhatsApp number, email and address
+- Enquiries, including search, mark-read and delete
+- Reviews, including approve, hide and delete
 
----
+Project images must be JPG, PNG or WEBP and no larger than 5 MB.
 
-## 3. Backend setup (Supabase) – needed for `/admin`
+## Formspree setup
 
-Supabase is free for a site this size.
+1. Create a form in Formspree.
+2. Copy its endpoint, such as `https://formspree.io/f/your-form-id`.
+3. Set `FORMSPREE_ENDPOINT` in `.env`.
 
-### 3.1 Create the project
-1. Sign up at <https://supabase.com> → **New project**. Choose a name, a strong database password (save it somewhere), and the region closest to your visitors.
-2. Wait about a minute for it to finish setting up.
+The enquiry API always saves in Supabase first. If forwarding fails or the
+endpoint is blank, the enquiry remains available in the admin dashboard.
 
-### 3.2 Create the admin login (this is your admin password)
-1. In Supabase: **Authentication → Users → Add user → Create new user**.
-2. Enter **your email** and a **strong password**. Tick **Auto Confirm User**. This is what you will type at `/admin`.
-3. **Important – stop strangers from registering:** go to **Authentication → Sign In / Providers** (or **Settings**) and turn **OFF** "Allow new users to sign up". Even if they did, the database rules in the next step only accept *your* email, but turning signups off is good practice.
+## API endpoints
 
-**To change the admin password later:** Authentication → Users → click your user → **Send password recovery**, or delete the user and create it again with a new password.
+| Endpoint | Access | Description |
+|---|---|---|
+| `GET /api/config` | Public | Supplies the Supabase URL and anon key to the browser |
+| `GET /api/projects` | Public | Lists projects |
+| `POST/PUT/DELETE /api/projects*` | Allowed admin | Adds, updates or deletes projects |
+| `GET /api/settings` | Public | Reads contact settings |
+| `PUT /api/settings` | Allowed admin | Updates contact settings |
+| `POST /api/enquiries` | Public | Validates and saves an enquiry, then forwards to Formspree |
+| `GET /api/enquiries` | Allowed admin | Lists enquiries |
+| `PATCH /api/enquiries/:id/read` | Allowed admin | Marks an enquiry read |
+| `DELETE /api/enquiries/:id` | Allowed admin | Deletes an enquiry |
+| `GET /api/reviews` | Public | Lists approved reviews |
+| `GET /api/reviews/all` | Allowed admin | Lists all reviews |
+| `POST /api/reviews` | Public | Adds a review |
+| `PATCH /api/reviews/:id/approve` | Allowed admin | Shows or hides a review |
+| `DELETE /api/reviews/:id` | Allowed admin | Deletes a review |
+| `POST /api/admin/verify` | Allowed admin | Verifies an admin access token |
+| `GET /api/admin/stats` | Allowed admin | Returns dashboard counts |
+| `POST /api/chat` | Public | Sends a prompt to the local RAG chat |
 
-### 3.3 Create the tables and security rules
-1. Open `supabase/schema.sql` from this project in a text editor.
-2. Find `YOUR_ADMIN_EMAIL` and replace it with **the exact email you used in step 3.2**.
-3. In Supabase: **SQL Editor → New query**, paste the whole file, click **Run**. You should see "Success".
+## Deploying with Cloudflare Pages
 
-This creates the settings table, the projects table (with your 4 sample projects), a public image bucket called `project-images`, and rules so that **anyone can read, but only your email can change anything**.
+The frontend and Express backend cannot be deployed together directly to
+Cloudflare Pages. Cloudflare Pages can host the static files in `public/`,
+while Express must run on a Node-capable host.
 
-### 3.4 Connect the site to Supabase
-1. In Supabase: **Project Settings → API**.
-2. Copy **Project URL** and the **anon public** key into `.env`:
-   ```
-   VITE_SUPABASE_URL=https://xxxxxxxx.supabase.co
-   VITE_SUPABASE_ANON_KEY=eyJhbGciOi...
-   ```
-   The anon key is designed to be public. **Never** use the `service_role` key anywhere in this project.
-3. Restart `npm run dev`, open <http://localhost:5173/admin> and log in.
+### 1. Deploy the Express backend
 
----
+Deploy this repository to Render, Railway, Fly.io or a VPS. Set these
+environment variables in the backend host:
 
-## 4. Using the admin panel
-
-Go to **yourdomain.com/admin** (it isn't linked anywhere on the site and is hidden from search engines).
-
-| Tab | What you can change |
-| --- | --- |
-| Contact & Social | Phone, email, WhatsApp number, address, Instagram and LinkedIn links |
-| Hero text | Headline, gradient part of the headline, subtext, button text |
-| Services | Add / edit / reorder / delete (choose an icon, title, description) |
-| Projects | Add / edit / delete / reorder; title, description, category, tags, link, image upload |
-| Testimonials | Add / edit / reorder / delete (name, role, quote, stars) |
-
-Press **Save changes** on each tab. Changes appear for every visitor on their next page load, with no redeploy.
-
-Notes
-- **WhatsApp number:** digits only with country code, e.g. `919876543210`.
-- **Project image:** a 16:10 screenshot (e.g. 1600×1000) looks best. Max 5 MB.
-- **Category** decides which filter button (Websites / E-commerce / Web Apps) shows the project.
-
----
-
-## 5. Deploy
-
-Both options give you free HTTPS and a free hosting URL. Push this folder to a GitHub repository first.
-
-### Vercel
-1. <https://vercel.com> → **Add New → Project** → import your GitHub repo (framework: Vite is detected automatically).
-2. Under **Environment Variables** add:
-   `VITE_FORMSPREE_FORM_ID`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`
-3. **Deploy.** `vercel.json` already makes `/admin` work on refresh.
-
-### Netlify
-1. <https://netlify.com> → **Add new site → Import an existing project** → pick your repo.
-2. Build command `npm run build`, publish directory `dist` (already set in `netlify.toml`).
-3. **Site configuration → Environment variables**: add the same three variables, then **Deploy**.
-
-> Environment variables are baked in at build time. If you change one, **redeploy**.
-
-### Custom domain
-Add your domain in the Vercel/Netlify dashboard and follow their DNS instructions.
-
-### After your domain is live (SEO / sharing)
-Search for `YOUR-DOMAIN.com` and replace it with your real domain in:
-- `index.html` (canonical, Open Graph and Twitter tags, structured data)
-- `public/robots.txt`
-- `public/sitemap.xml`
-
-Then test the link preview at <https://www.opengraph.xyz> (Facebook/WhatsApp/LinkedIn cache previews, so re-scrape if you change the image).
-
----
-
-## 6. Customising
-
-| Want to change | Where |
-| --- | --- |
-| **Logo** | Replace `public/logo.svg` (keep the name, or edit `src/components/Logo.jsx`). Also `public/favicon.svg`. |
-| **Share image** | Replace `public/og-image.png` (1200×630). |
-| Colours | `tailwind.config.js` → `colors` and `backgroundImage` |
-| Font | Poppins is loaded in `index.html`; for Montserrat change the Google Fonts link there and the order in `tailwind.config.js` |
-| Budget currency / ranges, project types | `src/config/site.js` |
-| Process steps, "Why Nextsyght" points | `src/components/Process.jsx`, `src/components/WhyUs.jsx` |
-| Default text before you use the admin | `src/data/defaults.js` |
-
----
-
-## 7. How the 3D and fallback work
-
-- One fixed WebGL canvas sits behind the page (`src/components/three/`): the eye, particles and floating shapes share it, so there is only a single WebGL context.
-- The 3D code is a **lazy-loaded chunk**: it is only downloaded on devices that pass `detectCapability()` (`src/lib/device.js`): WebGL present, not "reduce motion", not a low-memory / ≤2-core device, not Data Saver.
-- `FpsGuard` checks the frame rate in the first seconds; under ~24 FPS it switches to the fallback automatically. A WebGL context loss or a load error also triggers the fallback.
-- Mobile gets fewer particles/shapes and a lower pixel ratio.
-- Card tilt only runs on devices with a real mouse.
-
----
-
-## 8. Project structure
-
-```
-src/
-  components/      Sections, navbar, floating buttons, tilt card, reveal, icons
-    three/         HeroEye, Particles, FloatingShapes, FpsGuard, BackgroundScene
-  pages/           Home, Admin (+ admin/ editors), NotFound
-  context/         ContentContext – loads settings + projects from Supabase
-  lib/             Supabase client, device detection, helpers
-  config/ data/    Static config and default content
-supabase/schema.sql   Database + security rules (run once)
-public/               Logo, favicon, OG image, placeholder project images, robots, sitemap
+```env
+SUPABASE_URL=https://your-project-ref.supabase.co
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+ADMIN_EMAILS=nextsyght.web@gmail.com
+FORMSPREE_ENDPOINT=https://formspree.io/f/your-form-id
+PORT=3000
 ```
 
-## Troubleshooting
+Use the port required by the hosting platform if it does not automatically
+provide `PORT`. Keep `SUPABASE_SERVICE_ROLE_KEY` only in server-side hosting
+configuration.
 
-- **Admin says "Backend not connected":** `.env` values are missing or you didn't restart / redeploy after adding them.
-- **"Incorrect email or password":** use the user created in Supabase → Authentication → Users.
-- **Saving says "row-level security" / permission error:** the email in `schema.sql` doesn't exactly match the email you log in with. Fix the email in the `is_admin()` function and run it again.
-- **Site shows sample projects after setup:** schema not run yet, or the Supabase URL/key is wrong (check the browser console).
-- **Form not arriving:** confirm the Formspree email, check its spam folder, and make sure `VITE_FORMSPREE_FORM_ID` is set on your host and you redeployed.
+After deployment, copy the public Express API URL, for example:
+
+```text
+https://nextsyght-api.onrender.com
+```
+
+Confirm these routes respond:
+
+```text
+https://nextsyght-api.onrender.com/api/config
+https://nextsyght-api.onrender.com/api/projects
+https://nextsyght-api.onrender.com/api/settings
+```
+
+### 2. Deploy the frontend to Cloudflare Pages
+
+1. Push the repository to GitHub or GitLab.
+2. In Cloudflare Dashboard, open **Workers & Pages > Create application > Pages**
+   and connect the repository.
+3. Use these build settings:
+
+```text
+Framework preset: None
+Build command: (leave empty)
+Build output directory: public
+Root directory: /
+```
+
+There is no frontend build step because `public/` already contains HTML,
+CSS and JavaScript.
+
+Do not upload or configure `SUPABASE_SERVICE_ROLE_KEY` as a Cloudflare Pages
+environment variable.
+
+### 3. Route API requests through the frontend domain
+
+The browser code calls relative URLs such as `/api/projects` and
+`/api/settings`. Create `public/_redirects` with this line, replacing the
+backend hostname:
+
+```text
+/api/*  https://nextsyght-api.onrender.com/api/:splat  200
+```
+
+Cloudflare Pages then proxies `/api/*` from the same frontend domain to
+Express. Redeploy Pages after adding or changing `_redirects`.
+
+If Cloudflare Pages does not proxy a specific route on your plan or setup,
+instead set the frontend API base URL to the Express HTTPS origin and enable
+CORS on Express for the frontend domain.
+
+### 4. Add the domain and configure DNS
+
+1. In Cloudflare Pages, open **Custom domains**.
+2. Add the website domain, for example `nextsyght.com`.
+3. Add or verify the DNS records shown by Cloudflare.
+4. Enable HTTPS and wait for the certificate to become active.
+
+The API backend does not need to use the same domain. If it uses a separate
+subdomain, add that subdomain and its DNS/Caddy/Nginx or hosting-provider
+certificate settings there.
+
+### 5. Final deployment checklist
+
+- Confirm the homepage loads on the Pages domain.
+- Confirm `/api/projects`, `/api/settings` and `/api/reviews` return JSON.
+- Confirm `/admin.html` loads.
+- Confirm the Supabase Auth login works.
+- Confirm project image uploads work.
+- Confirm contact details update and appear on the homepage.
+- Confirm enquiries save in Supabase and forward to Formspree when configured.
+- Confirm WhatsApp opens with the correct number.
+- Confirm logged-out users receive a `401` or `403` for admin actions.
+- Confirm no browser request exposes the service-role key.
