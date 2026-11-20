@@ -1,3 +1,7 @@
+const API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+  ? ''
+  : 'https://nextsyght.onrender.com';
+
 // ---------- mobile nav ----------
 const toggle = document.getElementById('menuToggle');
 const links = document.getElementById('navLinks');
@@ -42,7 +46,7 @@ const projectGrid = document.getElementById('projectGrid');
 
 async function loadProjects() {
   try {
-    const res = await fetch('/api/projects');
+    const res = await fetch(`${API_BASE}/api/projects`);
     const projects = await res.json();
 
     if (!projects.length) {
@@ -86,7 +90,7 @@ const reviewGrid = document.getElementById('reviewGrid');
 
 async function loadReviews() {
   try {
-    const res = await fetch('/api/reviews');
+    const res = await fetch(`${API_BASE}/api/reviews`);
     const reviews = await res.json();
 
     if (!reviews.length) {
@@ -117,7 +121,7 @@ reviewForm.addEventListener('submit', async (e) => {
   msgEl.className = 'form-msg';
 
   try {
-    const res = await fetch('/api/reviews', {
+    const res = await fetch(`${API_BASE}/api/reviews`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -156,7 +160,7 @@ function setWhatsAppProject(projectTitle = '') {
 
 async function loadSettings() {
   try {
-    const res = await fetch('/api/settings');
+    const res = await fetch(`${API_BASE}/api/settings`);
     const settings = await res.json();
     if (!res.ok) throw new Error(settings.error || 'Could not load contact details');
 
@@ -195,7 +199,7 @@ enquiryForm.addEventListener('submit', async (e) => {
 
   try {
     const payload = Object.fromEntries(new FormData(enquiryForm).entries());
-    const res = await fetch('/api/enquiries', {
+    const res = await fetch(`${API_BASE}/api/enquiries`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
@@ -243,7 +247,7 @@ chatForm.addEventListener('submit', async (e) => {
   const loadingEl = addMessage('Thinking…', 'loading');
 
   try {
-    const res = await fetch('/api/chat', {
+    const res = await fetch(`${API_BASE}/api/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: question })

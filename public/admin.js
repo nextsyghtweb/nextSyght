@@ -1,5 +1,8 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
+const API_BASE = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+  ? ''
+  : 'https://nextsyght.onrender.com';
 const SESSION_KEY = 'dukaan_supabase_session';
 
 const loginScreen = document.getElementById('loginScreen');
@@ -30,6 +33,7 @@ function escapeHtml(str = '') {
 }
 
 async function apiFetch(url, options = {}) {
+  if (url.startsWith('/api/')) url = `${API_BASE}${url}`;
   const headers = options.headers || {};
   const accessToken = getAccessToken();
   if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
@@ -66,7 +70,7 @@ async function tryLogin(email, password) {
     const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
 
-    const res = await fetch('/api/admin/verify', {
+    const res = await fetch(`${API_BASE}/api/admin/verify`, {
       method: 'POST',
       headers: { Authorization: `Bearer ${data.session.access_token}` }
     });
@@ -293,7 +297,7 @@ const settingsMsg = document.getElementById('settingsMsg');
 
 async function loadSettings() {
   try {
-    const res = await fetch('/api/settings');
+    const res = await fetch(`${API_BASE}/api/settings`);
     const settings = await res.json();
     if (!res.ok) throw new Error(settings.error || 'Could not load contact details');
     document.getElementById('sPhone1').value = settings.phone_1 || '';
@@ -403,7 +407,7 @@ enquirySearch.addEventListener('input', renderEnquiries);
 // ---------- init ----------
 async function initializeAdmin() {
   try {
-    const response = await fetch('/api/config');
+    const response = await fetch(`${API_BASE}/api/config`);
     const config = await response.json();
     if (!response.ok) throw new Error(config.error || 'Supabase configuration failed');
 
