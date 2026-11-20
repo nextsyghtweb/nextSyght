@@ -30,6 +30,16 @@ function escapeHtml(str = '') {
   return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+async function readJson(response) {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(`API returned invalid JSON (HTTP ${response.status})`);
+  }
+}
+
 async function apiFetch(url, options = {}) {
   if (url.startsWith('/api/')) url = `${API_BASE}${url}`;
   const headers = options.headers || {};
@@ -72,7 +82,7 @@ async function tryLogin(email, password) {
       method: 'POST',
       headers: { Authorization: `Bearer ${data.session.access_token}` }
     });
-    const result = await res.json();
+    const result = await readJson(res);
     if (!res.ok) throw new Error(result.error || 'Login failed');
 
     sessionStorage.setItem(SESSION_KEY, JSON.stringify(data.session));
@@ -111,7 +121,7 @@ document.querySelectorAll('.tab-btn').forEach((btn) => {
 async function loadStats() {
   try {
     const res = await apiFetch('/api/admin/stats');
-    const s = await res.json();
+    const s = await readJson(res);
     document.getElementById('statProjects').textContent = s.projectCount;
     document.getElementById('statReviews').textContent = s.reviewCount;
     document.getElementById('statPending').textContent = s.pendingCount;
@@ -131,7 +141,7 @@ const projectIdField = document.getElementById('projectId');
 async function loadProjects() {
   try {
     const res = await apiFetch('/api/projects');
-    const projects = await res.json();
+    const projects = await readJson(res);
 
     if (!projects.length) {
       projectList.innerHTML = '<p class="empty-note">No projects yet — add your first one above.</p>';
@@ -202,7 +212,7 @@ projectForm.addEventListener('submit', async (e) => {
       method: id ? 'PUT' : 'POST',
       body: formData
     });
-    const data = await res.json();
+    const data = await readJson(res);
     if (!res.ok) throw new Error(data.error || 'Save failed');
 
     projectMsg.textContent = id ? 'Updated!' : 'Added!';
@@ -234,7 +244,7 @@ const reviewList = document.getElementById('reviewList');
 async function loadReviews() {
   try {
     const res = await apiFetch('/api/reviews/all');
-    const reviews = await res.json();
+    const reviews = await readJson(res);
 
     if (!reviews.length) {
       reviewList.innerHTML = '<p class="empty-note">No reviews yet.</p>';
@@ -296,7 +306,7 @@ const settingsMsg = document.getElementById('settingsMsg');
 async function loadSettings() {
   try {
     const res = await fetch(`${API_BASE}/api/settings`);
-    const settings = await res.json();
+    const settings = await readJson(res);
     if (!res.ok) throw new Error(settings.error || 'Could not load contact details');
     document.getElementById('sPhone1').value = settings.phone_1 || '';
     document.getElementById('sPhone2').value = settings.phone_2 || '';
@@ -320,7 +330,7 @@ settingsForm.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const data = await res.json();
+    const data = await readJson(res);
     if (!res.ok) throw new Error(data.error || 'Could not save contact details');
     settingsMsg.textContent = 'Contact details updated!';
     settingsMsg.className = 'form-msg ok';
@@ -338,7 +348,7 @@ let allEnquiries = [];
 async function loadEnquiries() {
   try {
     const res = await apiFetch('/api/enquiries');
-    allEnquiries = await res.json();
+    allEnquiries = await readJson(res);
     if (!res.ok) throw new Error(allEnquiries.error || 'Could not load enquiries');
     renderEnquiries();
   } catch (err) {
@@ -381,7 +391,7 @@ function renderEnquiries() {
 async function markEnquiryRead(id) {
   try {
     const res = await apiFetch(`/api/enquiries/${id}/read`, { method: 'PATCH' });
-    const data = await res.json();
+    const data = await readJson(res);
     if (!res.ok) throw new Error(data.error || 'Could not mark enquiry as read');
     await loadEnquiries();
   } catch (err) {
@@ -406,7 +416,7 @@ enquirySearch.addEventListener('input', renderEnquiries);
 async function initializeAdmin() {
   try {
     const response = await fetch(`${API_BASE}/api/config`);
-    const config = await response.json();
+    const config = await readJson(response);
     if (!response.ok) throw new Error(config.error || 'Supabase configuration failed');
 
     supabase = createClient(config.supabaseUrl, config.supabaseAnonKey, {

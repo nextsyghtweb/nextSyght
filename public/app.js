@@ -39,13 +39,23 @@ function escapeHtml(str = '') {
   return str.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+async function readJson(response) {
+  const text = await response.text();
+  if (!text) return {};
+  try {
+    return JSON.parse(text);
+  } catch {
+    throw new Error(`API returned invalid JSON (HTTP ${response.status})`);
+  }
+}
+
 // ---------- PROJECTS ----------
 const projectGrid = document.getElementById('projectGrid');
 
 async function loadProjects() {
   try {
     const res = await fetch(`${API_BASE}/api/projects`);
-    const projects = await res.json();
+    const projects = await readJson(res);
 
     if (!projects.length) {
       projectGrid.innerHTML = '<p class="empty-note">No projects added yet — check back soon.</p>';
@@ -89,7 +99,7 @@ const reviewGrid = document.getElementById('reviewGrid');
 async function loadReviews() {
   try {
     const res = await fetch(`${API_BASE}/api/reviews`);
-    const reviews = await res.json();
+    const reviews = await readJson(res);
 
     if (!reviews.length) {
       reviewGrid.innerHTML = '<p class="empty-note">No reviews yet — be the first to leave one.</p>';
@@ -124,7 +134,7 @@ reviewForm.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const data = await res.json();
+    const data = await readJson(res);
 
     if (!res.ok) throw new Error(data.error || 'Could not submit review');
 
@@ -159,7 +169,7 @@ function setWhatsAppProject(projectTitle = '') {
 async function loadSettings() {
   try {
     const res = await fetch(`${API_BASE}/api/settings`);
-    const settings = await res.json();
+    const settings = await readJson(res);
     if (!res.ok) throw new Error(settings.error || 'Could not load contact details');
 
     const phone1 = document.getElementById('footerPhone1');
@@ -202,7 +212,7 @@ enquiryForm.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    const data = await res.json();
+    const data = await readJson(res);
     if (!res.ok) throw new Error(data.error || 'Could not send enquiry');
     msgEl.textContent = data.message;
     msgEl.className = 'form-msg ok';
@@ -250,7 +260,7 @@ chatForm.addEventListener('submit', async (e) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ message: question })
     });
-    const data = await res.json();
+    const data = await readJson(res);
     loadingEl.remove();
 
     if (!res.ok) throw new Error(data.error || 'Something went wrong');
