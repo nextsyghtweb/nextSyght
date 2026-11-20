@@ -19,6 +19,10 @@ app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok' });
+});
+
 app.get('/api/config', (req, res) => {
   if (!process.env.SUPABASE_URL || !process.env.SUPABASE_ANON_KEY) {
     return res.status(500).json({ error: 'Supabase public configuration is missing' });
@@ -37,7 +41,7 @@ app.use('/api/admin', adminRouter);
 app.use('/api/settings', settingsRouter);
 app.use('/api/enquiries', enquiriesRouter);
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`NextSyght running at http://localhost:${PORT}`);
   console.log('Starting RAG chat engine (first run downloads ~400MB of models)...');
   initRag()
