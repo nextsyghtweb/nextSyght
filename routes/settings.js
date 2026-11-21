@@ -8,7 +8,7 @@ router.get('/', async (req, res) => {
   try {
     const { data, error } = await getSupabaseServerClient()
       .from('site_settings')
-      .select('phone_1, phone_2, whatsapp_number, email, address')
+      .select('phone_1, phone_2, whatsapp_number, email, address, instagram_url, twitter_url, telegram_url, linkedin_url')
       .eq('id', 1)
       .maybeSingle();
 
@@ -18,7 +18,11 @@ router.get('/', async (req, res) => {
       phone_2: '',
       whatsapp_number: '',
       email: '',
-      address: ''
+      address: '',
+      instagram_url: '',
+      twitter_url: '',
+      telegram_url: '',
+      linkedin_url: ''
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -26,7 +30,7 @@ router.get('/', async (req, res) => {
 });
 
 router.put('/', adminAuth, async (req, res) => {
-  const fields = ['phone_1', 'phone_2', 'whatsapp_number', 'email', 'address'];
+  const fields = ['phone_1', 'phone_2', 'whatsapp_number', 'email', 'address', 'instagram_url', 'twitter_url', 'telegram_url', 'linkedin_url'];
   const update = {};
   for (const field of fields) {
     update[field] = typeof req.body[field] === 'string' ? req.body[field].trim() : '';
@@ -36,7 +40,7 @@ router.put('/', adminAuth, async (req, res) => {
     const { data, error } = await getSupabaseServerClient()
       .from('site_settings')
       .upsert({ id: 1, ...update })
-      .select('phone_1, phone_2, whatsapp_number, email, address')
+      .select('phone_1, phone_2, whatsapp_number, email, address, instagram_url, twitter_url, telegram_url, linkedin_url')
       .single();
 
     if (error) throw new Error(error.message);

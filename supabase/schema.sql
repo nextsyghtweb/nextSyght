@@ -19,17 +19,33 @@ create table if not exists public.site_settings (
   phone_2 text not null default '',
   whatsapp_number text not null default '',
   email text not null default '',
-  address text not null default ''
+  address text not null default '',
+  instagram_url text not null default '',
+  twitter_url text not null default '',
+  telegram_url text not null default '',
+  linkedin_url text not null default ''
 );
 
-insert into public.site_settings (id, phone_1, phone_2, whatsapp_number, email, address)
+alter table public.site_settings add column if not exists instagram_url text not null default '';
+alter table public.site_settings add column if not exists twitter_url text not null default '';
+alter table public.site_settings add column if not exists telegram_url text not null default '';
+alter table public.site_settings add column if not exists linkedin_url text not null default '';
+
+insert into public.site_settings (
+  id, phone_1, phone_2, whatsapp_number, email, address,
+  instagram_url, twitter_url, telegram_url, linkedin_url
+)
 values (
   1,
   '+91 00000 00000',
   '',
   '',
   'hello@dukaandigital.in',
-  'Shrirampur, West Bengal, IN'
+  'Shrirampur, West Bengal, IN',
+  '',
+  '',
+  '',
+  ''
 )
 on conflict (id) do nothing;
 

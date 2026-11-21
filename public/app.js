@@ -156,6 +156,15 @@ function phoneHref(value) {
   return `tel:${value.replace(/[^\d+]/g, '')}`;
 }
 
+function externalHref(value) {
+  try {
+    const url = new URL(value);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch {
+    return '';
+  }
+}
+
 function setWhatsAppProject(projectTitle = '') {
   whatsappProject = projectTitle;
   const button = document.getElementById('whatsappButton');
@@ -176,6 +185,7 @@ async function loadSettings() {
     const phone2 = document.getElementById('footerPhone2');
     const email = document.getElementById('footerEmail');
     const address = document.getElementById('footerAddress');
+    const socialLinks = document.getElementById('footerSocialLinks');
 
     phone1.innerHTML = settings.phone_1
       ? `<a href="${phoneHref(settings.phone_1)}">${escapeHtml(settings.phone_1)}</a>`
@@ -187,6 +197,21 @@ async function loadSettings() {
       ? `<a href="mailto:${escapeHtml(settings.email)}">${escapeHtml(settings.email)}</a>`
       : '';
     address.textContent = settings.address || '';
+
+    const socials = [
+      ['Instagram', 'IG', settings.instagram_url],
+      ['Twitter', 'X', settings.twitter_url],
+      ['Telegram', 'TG', settings.telegram_url],
+      ['LinkedIn', 'in', settings.linkedin_url]
+    ];
+    socialLinks.innerHTML = socials
+      .map(([name, label, url]) => {
+        const href = externalHref(url || '');
+        return href
+          ? `<a href="${escapeHtml(href)}" target="_blank" rel="noopener noreferrer" aria-label="${name}" title="${name}">${label}</a>`
+          : '';
+      })
+      .join('');
 
     whatsappNumber = settings.whatsapp_number || '';
     setWhatsAppProject('');

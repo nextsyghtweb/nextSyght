@@ -313,6 +313,10 @@ async function loadSettings() {
     document.getElementById('sWhatsapp').value = settings.whatsapp_number || '';
     document.getElementById('sEmail').value = settings.email || '';
     document.getElementById('sAddress').value = settings.address || '';
+    document.getElementById('sInstagram').value = settings.instagram_url || '';
+    document.getElementById('sTwitter').value = settings.twitter_url || '';
+    document.getElementById('sTelegram').value = settings.telegram_url || '';
+    document.getElementById('sLinkedin').value = settings.linkedin_url || '';
   } catch (err) {
     settingsMsg.textContent = err.message;
     settingsMsg.className = 'form-msg err';

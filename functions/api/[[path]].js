@@ -229,18 +229,18 @@ export async function onRequest(context) {
 
     if (path === '/settings' && method === 'GET') {
       const supabase = getSupabase(env);
-      const { data, error } = await supabase.from('site_settings').select('phone_1, phone_2, whatsapp_number, email, address').eq('id', 1).maybeSingle();
+      const { data, error } = await supabase.from('site_settings').select('phone_1, phone_2, whatsapp_number, email, address, instagram_url, twitter_url, telegram_url, linkedin_url').eq('id', 1).maybeSingle();
       if (error) throw new Error(error.message);
-      return json(data || { phone_1: '', phone_2: '', whatsapp_number: '', email: '', address: '' });
+      return json(data || { phone_1: '', phone_2: '', whatsapp_number: '', email: '', address: '', instagram_url: '', twitter_url: '', telegram_url: '', linkedin_url: '' });
     }
     if (path === '/settings' && method === 'PUT') {
       const auth = await adminAuth(request, env);
       if (auth.error) return auth.error;
       const body = await readRequestJson(request);
-      const fields = ['phone_1', 'phone_2', 'whatsapp_number', 'email', 'address'];
+      const fields = ['phone_1', 'phone_2', 'whatsapp_number', 'email', 'address', 'instagram_url', 'twitter_url', 'telegram_url', 'linkedin_url'];
       const update = { id: 1 };
       for (const field of fields) update[field] = typeof body[field] === 'string' ? body[field].trim() : '';
-      const { data, error } = await auth.supabase.from('site_settings').upsert(update).select('phone_1, phone_2, whatsapp_number, email, address').single();
+      const { data, error } = await auth.supabase.from('site_settings').upsert(update).select('phone_1, phone_2, whatsapp_number, email, address, instagram_url, twitter_url, telegram_url, linkedin_url').single();
       if (error) throw new Error(error.message);
       return json(data);
     }
