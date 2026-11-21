@@ -2,7 +2,10 @@
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "nextsyght",
   "main": "src/index.js",
-  "compatibility_date": "2026-11-19",
+  "compatibility_date": "2026-11-21",
+  "ai": {
+    "binding": "AI"
+  },
   "assets": {
     "directory": "public",
     "binding": "ASSETS",
