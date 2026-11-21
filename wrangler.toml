@@ -4,7 +4,7 @@ compatibility_date = "2026-11-21"
 
 [vars]
 ADMIN_EMAILS = "nextsyght.web@gmail.com"
-FORMSPREE_ENDPOINT = "https://formspree.io/f/xrpqpzpz"
+FORMSPREE_ENDPOINT = "https://formspree.io/f/mqpqdbee"
 SUPABASE_ANON_KEY = "sb_publishable_aWDEZQsG9Y9TtaNqRQn9ug_JrZQQOHM"
 SUPABASE_URL = "https://hfppucjathfpfkrrtsyf.supabase.co"
 
