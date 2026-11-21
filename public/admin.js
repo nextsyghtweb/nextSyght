@@ -415,9 +415,29 @@ enquirySearch.addEventListener('input', renderEnquiries);
 // ---------- init ----------
 async function initializeAdmin() {
   try {
-    const response = await fetch(`${API_BASE}/api/config`);
-    const config = await readJson(response);
-    if (!response.ok) throw new Error(config.error || 'Supabase configuration failed');
+    let response;
+    let config;
+
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      response = await fetch(`${API_BASE}/api/config`, { cache: 'no-store' });
+
+      if (response.ok) {
+        config = await readJson(response);
+        break;
+      }
+
+      if ([429, 502, 503, 504].includes(response.status) && attempt < 2) {
+        await new Promise((resolve) => setTimeout(resolve, (attempt + 1) * 1000));
+        continue;
+      }
+
+      if ([429, 502, 503, 504].includes(response.status)) {
+        throw new Error('The API server is temporarily unavailable. Please try again shortly.');
+      }
+
+      config = await readJson(response);
+      throw new Error(config.error || 'Supabase configuration failed');
+    }
 
     supabase = createClient(config.supabaseUrl, config.supabaseAnonKey, {
       auth: { persistSession: false, autoRefreshToken: false }

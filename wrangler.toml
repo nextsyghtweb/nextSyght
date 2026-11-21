@@ -1,0 +1,6 @@
+name = "nextsyght"
+pages_build_output_dir = "public"
+compatibility_date = "2026-11-21"
+
+[ai]
+binding = "AI"

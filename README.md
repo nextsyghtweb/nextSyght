@@ -107,45 +107,11 @@ endpoint is blank, the enquiry remains available in the admin dashboard.
 | `GET /api/admin/stats` | Allowed admin | Returns dashboard counts |
 | `POST /api/chat` | Public | Sends a prompt to the local RAG chat |
 
-## Deploying with Cloudflare Pages
+## Deploying entirely on Cloudflare Pages
 
-The frontend and Express backend cannot be deployed together directly to
-Cloudflare Pages. Cloudflare Pages can host the static files in `public/`,
-while Express must run on a Node-capable host.
-
-### 1. Deploy the Express backend
-
-Deploy this repository to Render, Railway, Fly.io or a VPS. Set these
-environment variables in the backend host:
-
-```env
-SUPABASE_URL=https://your-project-ref.supabase.co
-SUPABASE_ANON_KEY=your_supabase_anon_key
-SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
-ADMIN_EMAILS=nextsyght.web@gmail.com
-FORMSPREE_ENDPOINT=https://formspree.io/f/your-form-id
-PORT=3000
-```
-
-Use the port required by the hosting platform if it does not automatically
-provide `PORT`. Keep `SUPABASE_SERVICE_ROLE_KEY` only in server-side hosting
-configuration.
-
-After deployment, copy the public Express API URL, for example:
-
-```text
-https://nextsyght-api.onrender.com
-```
-
-Confirm these routes respond:
-
-```text
-https://nextsyght-api.onrender.com/api/config
-https://nextsyght-api.onrender.com/api/projects
-https://nextsyght-api.onrender.com/api/settings
-```
-
-### 2. Deploy the frontend to Cloudflare Pages
+The static site and `/api/*` handlers are included in this repository. The
+Pages Functions implementation is in `functions/api/[[path]].js`; no Render,
+Railway or Express server is required.
 
 1. Push the repository to GitHub or GitLab.
 2. In Cloudflare Dashboard, open **Workers & Pages > Create application > Pages**
@@ -159,35 +125,30 @@ Build output directory: public
 Root directory: /
 ```
 
-There is no frontend build step because `public/` already contains HTML,
-CSS and JavaScript.
-
-Do not upload or configure `SUPABASE_SERVICE_ROLE_KEY` as a Cloudflare Pages
-environment variable.
-
-### 3. Route API requests through the frontend domain
-
-The browser code calls relative URLs such as `/api/projects` and
-`/api/settings`. Create `public/_redirects` with this line, replacing the
-backend hostname:
+4. In **Settings > Environment variables**, configure these for Production
+   and Preview:
 
 ```text
-/api/*  https://nextsyght-api.onrender.com/api/:splat  200
+SUPABASE_URL
+SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+ADMIN_EMAILS
+FORMSPREE_ENDPOINT
 ```
 
-Cloudflare Pages then proxies `/api/*` from the same frontend domain to
-Express. Redeploy Pages after adding or changing `_redirects`.
+Keep `SUPABASE_SERVICE_ROLE_KEY` secret and never add it to `public/`.
+The service-role key is only read by Pages Functions.
 
-If Cloudflare Pages does not proxy a specific route on your plan or setup,
-instead set the frontend API base URL to the Express HTTPS origin and enable
-CORS on Express for the frontend domain.
+5. Enable a Cloudflare Workers AI binding named `AI` for AI chat responses.
+   Without the binding, `/api/chat` uses direct knowledge-base matching.
 
-### 4. Add the domain and configure DNS
+API routes are served on the same domain, for example:
 
-1. In Cloudflare Pages, open **Custom domains**.
-2. Add the website domain, for example `nextsyght.com`.
-3. Add or verify the DNS records shown by Cloudflare.
-4. Enable HTTPS and wait for the certificate to become active.
+```text
+https://nextsyght.pages.dev/api/config
+https://nextsyght.pages.dev/api/projects
+https://nextsyght.pages.dev/api/settings
+```
 
 The API backend does not need to use the same domain. If it uses a separate
 subdomain, add that subdomain and its DNS/Caddy/Nginx or hosting-provider
