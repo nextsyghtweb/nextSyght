@@ -70,6 +70,13 @@ alter table public.site_settings enable row level security;
 alter table public.enquiries enable row level security;
 alter table public.reviews enable row level security;
 
+grant usage on schema public to anon, authenticated, service_role;
+grant select on public.projects, public.site_settings, public.reviews to anon, authenticated;
+grant select, insert, update, delete on public.projects, public.site_settings, public.enquiries, public.reviews to service_role;
+grant insert on public.enquiries, public.reviews to anon, authenticated;
+grant update on public.enquiries, public.reviews to authenticated;
+grant delete on public.enquiries, public.reviews to authenticated;
+
 drop policy if exists "Public read projects" on public.projects;
 create policy "Public read projects"
 on public.projects for select
